@@ -2,6 +2,9 @@ package main
 
 import (
 	"context"
+	"os"
+	"os/signal"
+	"syscall"
 
 	pb "hadoop/Nodes/_proto/pb"
 	"log"
@@ -11,9 +14,9 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func SendHeartbeatToMaster(client pb.HealthServiceClient) {
+func SendHeartbeatToMaster(client pb.HealthServiceClient, node_id string) {
 	req := &pb.HeartbeatRequest{
-		WorkerId:  "worker-node-01",
+		WorkerId:  node_id,
 		Timestamp: time.Now().Unix(),
 	}
 
@@ -26,15 +29,13 @@ func SendHeartbeatToMaster(client pb.HealthServiceClient) {
 	log.Printf("Response from master %v", res.GetAcknowledge())
 }
 
-func startHeartbeatLoop(conn *grpc.ClientConn, interval time.Duration) {
+func startHeartbeatLoop(conn *grpc.ClientConn, interval time.Duration, node_id string) {
 	client := pb.NewHealthServiceClient(conn)
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			SendHeartbeatToMaster(client)
-		}
+	for range ticker.C {
+		SendHeartbeatToMaster(client, node_id)
+
 	}
 
 }
@@ -47,7 +48,14 @@ func main() {
 	}
 	defer conn.Close()
 
-	go startHeartbeatLoop(conn, 3*time.Second)
+	go startHeartbeatLoop(conn, 3*time.Second, "node-01")
+	go startHeartbeatLoop(conn, 3*time.Second, "node-02")
+	go startHeartbeatLoop(conn, 20*time.Second, "node-03")
 	log.Println("Worker started")
-	select {}
+
+	stopChan := make(chan os.Signal, 1)
+	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)
+	log.Println("Usługi uruchomione w tle. Naciśnij Ctrl+C, aby wyłączyć.")
+	<-stopChan
+	log.Println("Otrzymano sygnał zamknięcia. Koniec pracy.")
 }
