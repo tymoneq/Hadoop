@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	pb "hadoop/Nodes/_proto/pb"
 	"log"
 	"net"
 	"time"
+
+	pb "hadoop/gRPC/pb"
 
 	"google.golang.org/grpc"
 )

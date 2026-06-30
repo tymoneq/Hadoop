@@ -1,7 +1,7 @@
 package main
 
 import (
-	"hadoop/Nodes/_proto/pb"
+	pb "hadoop/gRPC/pb"
 	"log"
 )
 

@@ -2,8 +2,7 @@ package main
 
 import (
 	"context"
-
-	pb "hadoop/Nodes/_proto/pb"
+	pb "hadoop/gRPC/pb"
 	"log"
 	"time"
 
