@@ -127,9 +127,9 @@ func (x *HeartbeatResponse) GetAcknowledge() bool {
 
 type NodeResources struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TotalStorage  uint64                 `protobuf:"varint,1,opt,name=total_storage,json=totalStorage,proto3" json:"total_storage,omitempty"`
-	UsedStorage   uint64                 `protobuf:"varint,2,opt,name=used_storage,json=usedStorage,proto3" json:"used_storage,omitempty"`
-	FreeStorage   uint64                 `protobuf:"varint,3,opt,name=free_storage,json=freeStorage,proto3" json:"free_storage,omitempty"`
+	TotalStorage  int64                  `protobuf:"varint,1,opt,name=total_storage,json=totalStorage,proto3" json:"total_storage,omitempty"`
+	UsedStorage   int64                  `protobuf:"varint,2,opt,name=used_storage,json=usedStorage,proto3" json:"used_storage,omitempty"`
+	FreeStorage   int64                  `protobuf:"varint,3,opt,name=free_storage,json=freeStorage,proto3" json:"free_storage,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -164,21 +164,21 @@ func (*NodeResources) Descriptor() ([]byte, []int) {
 	return file_heartbeat_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *NodeResources) GetTotalStorage() uint64 {
+func (x *NodeResources) GetTotalStorage() int64 {
 	if x != nil {
 		return x.TotalStorage
 	}
 	return 0
 }
 
-func (x *NodeResources) GetUsedStorage() uint64 {
+func (x *NodeResources) GetUsedStorage() int64 {
 	if x != nil {
 		return x.UsedStorage
 	}
 	return 0
 }
 
-func (x *NodeResources) GetFreeStorage() uint64 {
+func (x *NodeResources) GetFreeStorage() int64 {
 	if x != nil {
 		return x.FreeStorage
 	}
@@ -197,9 +197,9 @@ const file_heartbeat_proto_rawDesc = "" +
 	"\x11HeartbeatResponse\x12 \n" +
 	"\vacknowledge\x18\x01 \x01(\bR\vacknowledge\"z\n" +
 	"\rNodeResources\x12#\n" +
-	"\rtotal_storage\x18\x01 \x01(\x04R\ftotalStorage\x12!\n" +
-	"\fused_storage\x18\x02 \x01(\x04R\vusedStorage\x12!\n" +
-	"\ffree_storage\x18\x03 \x01(\x04R\vfreeStorage2[\n" +
+	"\rtotal_storage\x18\x01 \x01(\x03R\ftotalStorage\x12!\n" +
+	"\fused_storage\x18\x02 \x01(\x03R\vusedStorage\x12!\n" +
+	"\ffree_storage\x18\x03 \x01(\x03R\vfreeStorage2[\n" +
 	"\rHealthService\x12J\n" +
 	"\rSendHeartbeat\x12\x1b.heartbeat.HeartbeatRequest\x1a\x1c.heartbeat.HeartbeatResponseB\x06Z\x04./pbb\x06proto3"
 

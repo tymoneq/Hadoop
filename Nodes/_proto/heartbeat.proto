@@ -19,7 +19,7 @@ message HeartbeatResponse {
 }
 
 message NodeResources {
-  uint64 total_storage = 1;
-  uint64 used_storage = 2;
-  uint64 free_storage = 3;
+  int64 total_storage = 1;
+  int64 used_storage = 2;
+  int64 free_storage = 3;
 }

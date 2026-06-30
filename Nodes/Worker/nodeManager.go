@@ -10,9 +10,9 @@ const TOTAL_STORAGE = 4096 * 10000
 const FILE_PATH = "data/"
 
 type NodeManager struct {
-	totalStorage uint64
-	usedStorage  uint64
-	freeStorage  uint64
+	totalStorage int64
+	usedStorage  int64
+	freeStorage  int64
 	ChunkManager *LocalChunkManager
 }
 type MyError struct{}
@@ -20,7 +20,7 @@ type MyError struct{}
 type LocalChunk struct {
 	ChunkID     string
 	FilePath    string
-	Size        uint64
+	Size        int64
 	IsCorrupted bool
 }
 
@@ -62,20 +62,20 @@ func NewNodeManager() *NodeManager {
 
 }
 
-func (node *NodeManager) GetFreeStorage() uint64 {
+func (node *NodeManager) GetFreeStorage() int64 {
 	return node.freeStorage
 }
-func (node *NodeManager) GetUsedStorage() uint64 {
+func (node *NodeManager) GetUsedStorage() int64 {
 	return node.usedStorage
 }
-func (node *NodeManager) GetTotalStorage() uint64 {
+func (node *NodeManager) GetTotalStorage() int64 {
 	return node.totalStorage
 }
 func (node *NodeManager) GetChunkManager() *LocalChunkManager {
 	return node.ChunkManager
 }
 
-func (node *NodeManager) SaveFile(file_size uint64) (bool, error) {
+func (node *NodeManager) SaveFile(file_size int64) (bool, error) {
 	if file_size > node.GetFreeStorage() {
 		return false, &MyError{}
 	} else {
