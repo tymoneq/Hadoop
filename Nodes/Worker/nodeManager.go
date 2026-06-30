@@ -10,10 +10,10 @@ const TOTAL_STORAGE = 4096 * 10000
 const FILE_PATH = "data/"
 
 type NodeManager struct {
-	total_storage uint64
-	used_storage  uint64
-	free_storage  uint64
-	ChunkManager  *LocalChunkManager
+	totalStorage uint64
+	usedStorage  uint64
+	freeStorage  uint64
+	ChunkManager *LocalChunkManager
 }
 type MyError struct{}
 
@@ -51,22 +51,22 @@ func (node *NodeManager) InitializeStorage(node_id *string) (bool, error) {
 }
 
 func (node *NodeManager) Initialize(node_id *string) {
-	node.total_storage = TOTAL_STORAGE
-	node.free_storage = TOTAL_STORAGE
-	node.used_storage = 0
+	node.totalStorage = TOTAL_STORAGE
+	node.freeStorage = TOTAL_STORAGE
+	node.usedStorage = 0
 	node.ChunkManager = NewLocalChunkManager()
 	node.InitializeStorage(node_id)
 
 }
 
 func (node *NodeManager) GetFreeStorage() uint64 {
-	return node.free_storage
+	return node.freeStorage
 }
 func (node *NodeManager) GetUsedStorage() uint64 {
-	return node.used_storage
+	return node.usedStorage
 }
 func (node *NodeManager) GetTotalStorage() uint64 {
-	return node.total_storage
+	return node.totalStorage
 }
 func (node *NodeManager) GetChunkManager() *LocalChunkManager {
 	return node.ChunkManager

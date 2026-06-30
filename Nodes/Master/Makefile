@@ -1,4 +1,4 @@
 
-run: main.go
-	go build main.go
+run: main.go heartbeat.go
+	go build main.go heartbeat.go
 	./main
