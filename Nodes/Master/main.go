@@ -15,7 +15,7 @@ func main() {
 
 	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)
-	log.Println("Usługi uruchomione w tle. Naciśnij Ctrl+C, aby wyłączyć.")
+	log.Println("Running processes in the background.")
 	<-stopChan
-	log.Println("Otrzymano sygnał zamknięcia. Koniec pracy.")
+	log.Println("Termination Signal Receive.")
 }
