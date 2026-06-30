@@ -25,6 +25,7 @@ type HeartbeatRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkerId      string                 `protobuf:"bytes,1,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
 	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Resources     *NodeResources         `protobuf:"bytes,3,opt,name=resources,proto3" json:"resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,6 +74,13 @@ func (x *HeartbeatRequest) GetTimestamp() int64 {
 	return 0
 }
 
+func (x *HeartbeatRequest) GetResources() *NodeResources {
+	if x != nil {
+		return x.Resources
+	}
+	return nil
+}
+
 type HeartbeatResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Acknowledge   bool                   `protobuf:"varint,1,opt,name=acknowledge,proto3" json:"acknowledge,omitempty"`
@@ -117,16 +125,81 @@ func (x *HeartbeatResponse) GetAcknowledge() bool {
 	return false
 }
 
+type NodeResources struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TotalStorage  uint64                 `protobuf:"varint,1,opt,name=total_storage,json=totalStorage,proto3" json:"total_storage,omitempty"`
+	UsedStorage   uint64                 `protobuf:"varint,2,opt,name=used_storage,json=usedStorage,proto3" json:"used_storage,omitempty"`
+	FreeStorage   uint64                 `protobuf:"varint,3,opt,name=free_storage,json=freeStorage,proto3" json:"free_storage,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodeResources) Reset() {
+	*x = NodeResources{}
+	mi := &file_heartbeat_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodeResources) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodeResources) ProtoMessage() {}
+
+func (x *NodeResources) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodeResources.ProtoReflect.Descriptor instead.
+func (*NodeResources) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *NodeResources) GetTotalStorage() uint64 {
+	if x != nil {
+		return x.TotalStorage
+	}
+	return 0
+}
+
+func (x *NodeResources) GetUsedStorage() uint64 {
+	if x != nil {
+		return x.UsedStorage
+	}
+	return 0
+}
+
+func (x *NodeResources) GetFreeStorage() uint64 {
+	if x != nil {
+		return x.FreeStorage
+	}
+	return 0
+}
+
 var File_heartbeat_proto protoreflect.FileDescriptor
 
 const file_heartbeat_proto_rawDesc = "" +
 	"\n" +
-	"\x0fheartbeat.proto\x12\theartbeat\"M\n" +
+	"\x0fheartbeat.proto\x12\theartbeat\"\x85\x01\n" +
 	"\x10HeartbeatRequest\x12\x1b\n" +
 	"\tworker_id\x18\x01 \x01(\tR\bworkerId\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"5\n" +
+	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x126\n" +
+	"\tresources\x18\x03 \x01(\v2\x18.heartbeat.NodeResourcesR\tresources\"5\n" +
 	"\x11HeartbeatResponse\x12 \n" +
-	"\vacknowledge\x18\x01 \x01(\bR\vacknowledge2[\n" +
+	"\vacknowledge\x18\x01 \x01(\bR\vacknowledge\"z\n" +
+	"\rNodeResources\x12#\n" +
+	"\rtotal_storage\x18\x01 \x01(\x04R\ftotalStorage\x12!\n" +
+	"\fused_storage\x18\x02 \x01(\x04R\vusedStorage\x12!\n" +
+	"\ffree_storage\x18\x03 \x01(\x04R\vfreeStorage2[\n" +
 	"\rHealthService\x12J\n" +
 	"\rSendHeartbeat\x12\x1b.heartbeat.HeartbeatRequest\x1a\x1c.heartbeat.HeartbeatResponseB\x06Z\x04./pbb\x06proto3"
 
@@ -142,19 +215,21 @@ func file_heartbeat_proto_rawDescGZIP() []byte {
 	return file_heartbeat_proto_rawDescData
 }
 
-var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_heartbeat_proto_goTypes = []any{
 	(*HeartbeatRequest)(nil),  // 0: heartbeat.HeartbeatRequest
 	(*HeartbeatResponse)(nil), // 1: heartbeat.HeartbeatResponse
+	(*NodeResources)(nil),     // 2: heartbeat.NodeResources
 }
 var file_heartbeat_proto_depIdxs = []int32{
-	0, // 0: heartbeat.HealthService.SendHeartbeat:input_type -> heartbeat.HeartbeatRequest
-	1, // 1: heartbeat.HealthService.SendHeartbeat:output_type -> heartbeat.HeartbeatResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	2, // 0: heartbeat.HeartbeatRequest.resources:type_name -> heartbeat.NodeResources
+	0, // 1: heartbeat.HealthService.SendHeartbeat:input_type -> heartbeat.HeartbeatRequest
+	1, // 2: heartbeat.HealthService.SendHeartbeat:output_type -> heartbeat.HeartbeatResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_heartbeat_proto_init() }
@@ -168,7 +243,7 @@ func file_heartbeat_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_heartbeat_proto_rawDesc), len(file_heartbeat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

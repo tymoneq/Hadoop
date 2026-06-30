@@ -1,5 +1,7 @@
 package main
 
+import "hadoop/Nodes/_proto/pb"
+
 const REPLICATION_FACTOR uint8 = 3
 
 type WorkerManager struct {
@@ -19,7 +21,7 @@ type NodeMaster struct {
 	usedStorage   uint64
 	heartbeats    *SafeMap[string, int64]
 	workerManager *SafeMap[string, WorkerManager]
-	nodeStatus    *SafeMap[string, bool]
+	nodeStatus    *SafeMap[string, bool] // true alive false down
 	metadata      *Metadata
 }
 
@@ -43,3 +45,43 @@ func NewNodeMaster() *NodeMaster {
 	}
 
 }
+
+func (n *NodeMaster) GetTotalStorage() uint64 {
+	return n.totalStorage
+}
+
+func (n *NodeMaster) GetFreeStorage() uint64 {
+	return n.freeStorage
+}
+
+func (n *NodeMaster) GetUsedStorage() uint64 {
+	return n.usedStorage
+}
+
+func (n *NodeMaster) GetHeartbeats() *SafeMap[string, int64] {
+	return n.heartbeats
+}
+
+func (n *NodeMaster) GetWorkerManager() *SafeMap[string, WorkerManager] {
+	return n.workerManager
+}
+
+func (n *NodeMaster) GetNodeStatus() *SafeMap[string, bool] {
+	return n.nodeStatus
+}
+func (n *NodeMaster) GetMetadata() *Metadata {
+	return n.metadata
+}
+
+func (n *NodeMaster) UpdateWorkerManager(node_id string, workerResources *pb.NodeResources) {
+	w := WorkerManager{
+		totalStorage: workerResources.TotalStorage,
+		usedStorage:  workerResources.UsedStorage,
+		freeStorage:  workerResources.FreeStorage,
+	}
+
+	n.GetWorkerManager().Set(node_id, w)
+
+}
+
+var nodeMaster *NodeMaster = NewNodeMaster()

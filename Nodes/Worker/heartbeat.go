@@ -15,6 +15,11 @@ func SendHeartbeatToMaster(client pb.HealthServiceClient, node_id string) {
 	req := &pb.HeartbeatRequest{
 		WorkerId:  node_id,
 		Timestamp: time.Now().Unix(),
+		Resources: &pb.NodeResources{
+			TotalStorage: nodeManager.GetTotalStorage(),
+			UsedStorage:  nodeManager.GetUsedStorage(),
+			FreeStorage:  nodeManager.GetFreeStorage(),
+		},
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)

@@ -11,8 +11,15 @@ service HealthService {
 message HeartbeatRequest {
   string worker_id = 1;
   int64 timestamp = 2;
+  NodeResources resources = 3;
 }
 
 message HeartbeatResponse {
   bool acknowledge = 1;
+}
+
+message NodeResources {
+  uint64 total_storage = 1;
+  uint64 used_storage = 2;
+  uint64 free_storage = 3;
 }

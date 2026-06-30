@@ -17,11 +17,21 @@ type server struct {
 	pb.UnimplementedHealthServiceServer
 }
 
-var nodes = &SafeMap[string, int64]{nodes: make(map[string]int64)}
+func updateWorker(ctx context.Context, req *pb.HeartbeatRequest) {
+	nodeMaster.GetHeartbeats().Set(req.GetWorkerId(), req.GetTimestamp())
+	nodeMaster.GetNodeStatus().Set(req.WorkerId, true)
+	nodeMaster.UpdateWorkerManager(req.WorkerId, req.Resources)
+}
 
 func (s *server) SendHeartbeat(ctx context.Context, req *pb.HeartbeatRequest) (*pb.HeartbeatResponse, error) {
 	log.Printf("Receive heartbeat from worker %s at %v", req.GetWorkerId(), req.GetTimestamp())
-	nodes.Set(req.GetWorkerId(), req.GetTimestamp())
+
+	updateWorker(ctx, req)
+
+	totalStorage, _ := nodeMaster.GetWorkerManager().Get(req.WorkerId)
+
+	log.Printf("Worker id - %s send worker manager data total storage = %d", req.WorkerId, totalStorage)
+
 	return &pb.HeartbeatResponse{
 		Acknowledge: true,
 	}, nil
@@ -49,8 +59,9 @@ func checkHealth(interval time.Duration) {
 	defer ticker.Stop()
 
 	for range ticker.C {
-		for key, val := range nodes.nodes {
+		for key, val := range nodeMaster.GetHeartbeats().nodes {
 			if time.Now().Unix()-val >= 10 {
+				nodeMaster.GetNodeStatus().Set(key, false)
 				log.Printf("Node %s is down", key)
 			}
 		}

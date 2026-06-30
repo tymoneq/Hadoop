@@ -50,12 +50,15 @@ func (node *NodeManager) InitializeStorage(node_id *string) (bool, error) {
 
 }
 
-func (node *NodeManager) Initialize(node_id *string) {
-	node.totalStorage = TOTAL_STORAGE
-	node.freeStorage = TOTAL_STORAGE
-	node.usedStorage = 0
-	node.ChunkManager = NewLocalChunkManager()
-	node.InitializeStorage(node_id)
+func NewNodeManager() *NodeManager {
+	node := &NodeManager{
+		totalStorage: TOTAL_STORAGE,
+		freeStorage:  TOTAL_STORAGE,
+		usedStorage:  0,
+		ChunkManager: NewLocalChunkManager(),
+	}
+
+	return node
 
 }
 
@@ -81,3 +84,5 @@ func (node *NodeManager) SaveFile(file_size uint64) (bool, error) {
 	}
 
 }
+
+var nodeManager *NodeManager = NewNodeManager()
