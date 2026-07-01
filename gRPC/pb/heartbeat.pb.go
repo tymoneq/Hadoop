@@ -349,6 +349,118 @@ func (x *NodesID) GetNodeIp() string {
 	return ""
 }
 
+type ChunkData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ChunkId       string                 `protobuf:"bytes,1,opt,name=chunk_id,json=chunkId,proto3" json:"chunk_id,omitempty"`
+	Data          []byte                 `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	IsLast        bool                   `protobuf:"varint,3,opt,name=is_last,json=isLast,proto3" json:"is_last,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChunkData) Reset() {
+	*x = ChunkData{}
+	mi := &file_heartbeat_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChunkData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChunkData) ProtoMessage() {}
+
+func (x *ChunkData) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChunkData.ProtoReflect.Descriptor instead.
+func (*ChunkData) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ChunkData) GetChunkId() string {
+	if x != nil {
+		return x.ChunkId
+	}
+	return ""
+}
+
+func (x *ChunkData) GetData() []byte {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+func (x *ChunkData) GetIsLast() bool {
+	if x != nil {
+		return x.IsLast
+	}
+	return false
+}
+
+type TransferStatus struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TransferStatus) Reset() {
+	*x = TransferStatus{}
+	mi := &file_heartbeat_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TransferStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TransferStatus) ProtoMessage() {}
+
+func (x *TransferStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TransferStatus.ProtoReflect.Descriptor instead.
+func (*TransferStatus) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TransferStatus) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *TransferStatus) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_heartbeat_proto protoreflect.FileDescriptor
 
 const file_heartbeat_proto_rawDesc = "" +
@@ -374,11 +486,20 @@ const file_heartbeat_proto_rawDesc = "" +
 	"\x05nodes\x18\x02 \x03(\v2\x14.hadoop_grpc.NodesIDR\x05nodes\";\n" +
 	"\aNodesID\x12\x17\n" +
 	"\anode_id\x18\x01 \x01(\tR\x06nodeId\x12\x17\n" +
-	"\anode_ip\x18\x02 \x01(\tR\x06nodeIp2_\n" +
+	"\anode_ip\x18\x02 \x01(\tR\x06nodeIp\"S\n" +
+	"\tChunkData\x12\x19\n" +
+	"\bchunk_id\x18\x01 \x01(\tR\achunkId\x12\x12\n" +
+	"\x04data\x18\x02 \x01(\fR\x04data\x12\x17\n" +
+	"\ais_last\x18\x03 \x01(\bR\x06isLast\"D\n" +
+	"\x0eTransferStatus\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage2_\n" +
 	"\rHealthService\x12N\n" +
 	"\rSendHeartbeat\x12\x1d.hadoop_grpc.HeartbeatRequest\x1a\x1e.hadoop_grpc.HeartbeatResponse2u\n" +
 	"\x1aFileWritingMetadataService\x12W\n" +
-	"\x10SendFileMetadata\x12 .hadoop_grpc.FileMetadataRequest\x1a!.hadoop_grpc.FileMetadataResponseB\x06Z\x04./pbb\x06proto3"
+	"\x10SendFileMetadata\x12 .hadoop_grpc.FileMetadataRequest\x1a!.hadoop_grpc.FileMetadataResponse2X\n" +
+	"\x12FileSendingService\x12B\n" +
+	"\tSendChunk\x12\x16.hadoop_grpc.ChunkData\x1a\x1b.hadoop_grpc.TransferStatus(\x01B\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_heartbeat_proto_rawDescOnce sync.Once
@@ -392,7 +513,7 @@ func file_heartbeat_proto_rawDescGZIP() []byte {
 	return file_heartbeat_proto_rawDescData
 }
 
-var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_heartbeat_proto_goTypes = []any{
 	(*HeartbeatRequest)(nil),     // 0: hadoop_grpc.HeartbeatRequest
 	(*HeartbeatResponse)(nil),    // 1: hadoop_grpc.HeartbeatResponse
@@ -400,16 +521,20 @@ var file_heartbeat_proto_goTypes = []any{
 	(*FileMetadataRequest)(nil),  // 3: hadoop_grpc.FileMetadataRequest
 	(*FileMetadataResponse)(nil), // 4: hadoop_grpc.FileMetadataResponse
 	(*NodesID)(nil),              // 5: hadoop_grpc.NodesID
+	(*ChunkData)(nil),            // 6: hadoop_grpc.ChunkData
+	(*TransferStatus)(nil),       // 7: hadoop_grpc.TransferStatus
 }
 var file_heartbeat_proto_depIdxs = []int32{
 	2, // 0: hadoop_grpc.HeartbeatRequest.resources:type_name -> hadoop_grpc.NodeResources
 	5, // 1: hadoop_grpc.FileMetadataResponse.nodes:type_name -> hadoop_grpc.NodesID
 	0, // 2: hadoop_grpc.HealthService.SendHeartbeat:input_type -> hadoop_grpc.HeartbeatRequest
 	3, // 3: hadoop_grpc.FileWritingMetadataService.SendFileMetadata:input_type -> hadoop_grpc.FileMetadataRequest
-	1, // 4: hadoop_grpc.HealthService.SendHeartbeat:output_type -> hadoop_grpc.HeartbeatResponse
-	4, // 5: hadoop_grpc.FileWritingMetadataService.SendFileMetadata:output_type -> hadoop_grpc.FileMetadataResponse
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
+	6, // 4: hadoop_grpc.FileSendingService.SendChunk:input_type -> hadoop_grpc.ChunkData
+	1, // 5: hadoop_grpc.HealthService.SendHeartbeat:output_type -> hadoop_grpc.HeartbeatResponse
+	4, // 6: hadoop_grpc.FileWritingMetadataService.SendFileMetadata:output_type -> hadoop_grpc.FileMetadataResponse
+	7, // 7: hadoop_grpc.FileSendingService.SendChunk:output_type -> hadoop_grpc.TransferStatus
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -426,9 +551,9 @@ func file_heartbeat_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_heartbeat_proto_rawDesc), len(file_heartbeat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   8,
 			NumExtensions: 0,
-			NumServices:   2,
+			NumServices:   3,
 		},
 		GoTypes:           file_heartbeat_proto_goTypes,
 		DependencyIndexes: file_heartbeat_proto_depIdxs,

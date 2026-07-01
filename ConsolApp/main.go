@@ -3,15 +3,21 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"hadoop/gRPC/pb"
 	"log"
 	"os"
 	"strings"
+
+	"google.golang.org/grpc"
 )
 
 const BLOCK_SIZE int = 8096
 const REPLICATION_FACTOR uint8 = 3
 
 func main() {
+
+	s := grpc.NewServer()
+	pb.RegisterFileSendingServiceServer(s, &server{})
 
 	stopChan := make(chan os.Signal, 1)
 

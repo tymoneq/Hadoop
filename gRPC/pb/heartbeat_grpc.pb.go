@@ -222,3 +222,98 @@ var FileWritingMetadataService_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "heartbeat.proto",
 }
+
+const (
+	FileSendingService_SendChunk_FullMethodName = "/hadoop_grpc.FileSendingService/SendChunk"
+)
+
+// FileSendingServiceClient is the client API for FileSendingService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FileSendingServiceClient interface {
+	SendChunk(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ChunkData, TransferStatus], error)
+}
+
+type fileSendingServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFileSendingServiceClient(cc grpc.ClientConnInterface) FileSendingServiceClient {
+	return &fileSendingServiceClient{cc}
+}
+
+func (c *fileSendingServiceClient) SendChunk(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[ChunkData, TransferStatus], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &FileSendingService_ServiceDesc.Streams[0], FileSendingService_SendChunk_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ChunkData, TransferStatus]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type FileSendingService_SendChunkClient = grpc.ClientStreamingClient[ChunkData, TransferStatus]
+
+// FileSendingServiceServer is the server API for FileSendingService service.
+// All implementations must embed UnimplementedFileSendingServiceServer
+// for forward compatibility.
+type FileSendingServiceServer interface {
+	SendChunk(grpc.ClientStreamingServer[ChunkData, TransferStatus]) error
+	mustEmbedUnimplementedFileSendingServiceServer()
+}
+
+// UnimplementedFileSendingServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFileSendingServiceServer struct{}
+
+func (UnimplementedFileSendingServiceServer) SendChunk(grpc.ClientStreamingServer[ChunkData, TransferStatus]) error {
+	return status.Error(codes.Unimplemented, "method SendChunk not implemented")
+}
+func (UnimplementedFileSendingServiceServer) mustEmbedUnimplementedFileSendingServiceServer() {}
+func (UnimplementedFileSendingServiceServer) testEmbeddedByValue()                            {}
+
+// UnsafeFileSendingServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FileSendingServiceServer will
+// result in compilation errors.
+type UnsafeFileSendingServiceServer interface {
+	mustEmbedUnimplementedFileSendingServiceServer()
+}
+
+func RegisterFileSendingServiceServer(s grpc.ServiceRegistrar, srv FileSendingServiceServer) {
+	// If the following call panics, it indicates UnimplementedFileSendingServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FileSendingService_ServiceDesc, srv)
+}
+
+func _FileSendingService_SendChunk_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(FileSendingServiceServer).SendChunk(&grpc.GenericServerStream[ChunkData, TransferStatus]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type FileSendingService_SendChunkServer = grpc.ClientStreamingServer[ChunkData, TransferStatus]
+
+// FileSendingService_ServiceDesc is the grpc.ServiceDesc for FileSendingService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FileSendingService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hadoop_grpc.FileSendingService",
+	HandlerType: (*FileSendingServiceServer)(nil),
+	Methods:     []grpc.MethodDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "SendChunk",
+			Handler:       _FileSendingService_SendChunk_Handler,
+			ClientStreams: true,
+		},
+	},
+	Metadata: "heartbeat.proto",
+}

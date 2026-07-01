@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"hadoop/gRPC/pb"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -17,7 +18,12 @@ type FileToSend struct {
 	fileName  string
 }
 
+type server struct {
+	pb.UnimplementedFileSendingServiceServer
+}
+
 var client pb.FileWritingMetadataServiceClient
+var sendingClient pb.FileSendingServiceClient
 
 func startConnection() *grpc.ClientConn {
 
@@ -47,7 +53,7 @@ func GetFileMetadata(filepath string) *FileToSend {
 
 }
 
-func SendFileMetadataToMaster(fileMetadata *FileToSend) {
+func SendFileMetadataToMaster(fileMetadata *FileToSend) (*pb.FileMetadataResponse, error) {
 	req := &pb.FileMetadataRequest{
 		TotalSize: fileMetadata.totalSize,
 		FileName:  fileMetadata.fileName,
@@ -59,14 +65,65 @@ func SendFileMetadataToMaster(fileMetadata *FileToSend) {
 	if err != nil {
 		log.Fatalf("Error sending file metadata : %v\n", err)
 	}
+	return res, err
+}
 
-	log.Printf("Response from master %v\n", res)
+func streamFileToWorker(filePath string, nodes []*pb.NodesID) bool {
+	file, err := os.Open(filePath)
+	if err != nil {
+		log.Fatalf("%v", err)
+		return false
+	}
+	defer file.Close()
+
+	stream, err := sendingClient.SendChunk(context.Background())
+	if err != nil {
+		log.Fatalf("%v", err)
+		return false
+	}
+	buffer := make([]byte, 64*1024)
+	chunk_id := 1
+
+	for {
+		bytesRead, err := file.Read(buffer)
+		if err == io.EOF {
+			stream.Send(&pb.ChunkData{ChunkId: "2137", IsLast: true})
+			break
+		} else if err != nil {
+			log.Fatalf("Something went wrong %v", err)
+			break
+		}
+
+		err = stream.Send(&pb.ChunkData{
+			ChunkId: string(chunk_id),
+			Data:    buffer[:bytesRead],
+			IsLast:  false,
+		})
+		chunk_id++
+	}
+
+	status, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("Error %v", err)
+		return false
+	}
+	if status.GetSuccess() {
+		log.Printf("File Send Successfully")
+		return true
+	}
+	return false
 
 }
 
 func sendFile(filepath string) bool {
 	fileMetadata := GetFileMetadata(filepath)
-	SendFileMetadataToMaster(fileMetadata)
+	status, err := SendFileMetadataToMaster(fileMetadata)
+	if err != nil {
+		return false
+	}
+	if streamFileToWorker(filepath, status.Nodes) {
+		return true
+	}
 
-	return true
+	return false
 }

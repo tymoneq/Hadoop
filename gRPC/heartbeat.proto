@@ -12,6 +12,10 @@ service FileWritingMetadataService {
   rpc SendFileMetadata(FileMetadataRequest) returns (FileMetadataResponse);
 }
 
+service FileSendingService {
+  rpc SendChunk(stream ChunkData) returns (TransferStatus);
+}
+
 message HeartbeatRequest {
   string worker_id = 1;
   string ip = 2;
@@ -42,4 +46,15 @@ message FileMetadataResponse {
 message NodesID {
   string node_id = 1;
   string node_ip = 2;
+}
+
+message ChunkData {
+  string chunk_id = 1;
+  bytes data = 2;
+  bool is_last = 3;
+}
+
+message TransferStatus {
+  bool success = 1;
+  string message = 2;
 }

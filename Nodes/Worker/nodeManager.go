@@ -6,8 +6,8 @@ import (
 	"sync"
 )
 
-const BLOCK_SIZE int64 = 8096
-const TOTAL_STORAGE int64 = BLOCK_SIZE * 10000
+const BLOCK_SIZE int64 = 8096 * 10
+const TOTAL_STORAGE int64 = BLOCK_SIZE * 1000
 const FILE_PATH = "data/"
 
 type NodeManager struct {
