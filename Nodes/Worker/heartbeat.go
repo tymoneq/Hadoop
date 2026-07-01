@@ -4,15 +4,29 @@ import (
 	"context"
 	pb "hadoop/gRPC/pb"
 	"log"
+	"net"
 	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+func GetOutboundIP() net.IP {
+	conn, err := net.Dial("udp", "8.8.8.8:80")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer conn.Close()
+
+	localAddr := conn.LocalAddr().(*net.UDPAddr)
+
+	return localAddr.IP
+}
+
 func SendHeartbeatToMaster(client pb.HealthServiceClient, node_id string) {
 	req := &pb.HeartbeatRequest{
 		WorkerId:  node_id,
+		Ip:        GetOutboundIP().String(),
 		Timestamp: time.Now().Unix(),
 		Resources: &pb.NodeResources{
 			TotalStorage: nodeManager.GetTotalStorage(),

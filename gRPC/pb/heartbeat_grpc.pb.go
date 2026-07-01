@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	HealthService_SendHeartbeat_FullMethodName = "/heartbeat.HealthService/SendHeartbeat"
+	HealthService_SendHeartbeat_FullMethodName = "/hadoop_grpc.HealthService/SendHeartbeat"
 )
 
 // HealthServiceClient is the client API for HealthService service.
@@ -108,12 +108,115 @@ func _HealthService_SendHeartbeat_Handler(srv interface{}, ctx context.Context, 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var HealthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "heartbeat.HealthService",
+	ServiceName: "hadoop_grpc.HealthService",
 	HandlerType: (*HealthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "SendHeartbeat",
 			Handler:    _HealthService_SendHeartbeat_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "heartbeat.proto",
+}
+
+const (
+	FileWritingMetadataService_SendFileMetadata_FullMethodName = "/hadoop_grpc.FileWritingMetadataService/SendFileMetadata"
+)
+
+// FileWritingMetadataServiceClient is the client API for FileWritingMetadataService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type FileWritingMetadataServiceClient interface {
+	SendFileMetadata(ctx context.Context, in *FileMetadataRequest, opts ...grpc.CallOption) (*FileMetadataResponse, error)
+}
+
+type fileWritingMetadataServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewFileWritingMetadataServiceClient(cc grpc.ClientConnInterface) FileWritingMetadataServiceClient {
+	return &fileWritingMetadataServiceClient{cc}
+}
+
+func (c *fileWritingMetadataServiceClient) SendFileMetadata(ctx context.Context, in *FileMetadataRequest, opts ...grpc.CallOption) (*FileMetadataResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FileMetadataResponse)
+	err := c.cc.Invoke(ctx, FileWritingMetadataService_SendFileMetadata_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// FileWritingMetadataServiceServer is the server API for FileWritingMetadataService service.
+// All implementations must embed UnimplementedFileWritingMetadataServiceServer
+// for forward compatibility.
+type FileWritingMetadataServiceServer interface {
+	SendFileMetadata(context.Context, *FileMetadataRequest) (*FileMetadataResponse, error)
+	mustEmbedUnimplementedFileWritingMetadataServiceServer()
+}
+
+// UnimplementedFileWritingMetadataServiceServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedFileWritingMetadataServiceServer struct{}
+
+func (UnimplementedFileWritingMetadataServiceServer) SendFileMetadata(context.Context, *FileMetadataRequest) (*FileMetadataResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method SendFileMetadata not implemented")
+}
+func (UnimplementedFileWritingMetadataServiceServer) mustEmbedUnimplementedFileWritingMetadataServiceServer() {
+}
+func (UnimplementedFileWritingMetadataServiceServer) testEmbeddedByValue() {}
+
+// UnsafeFileWritingMetadataServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FileWritingMetadataServiceServer will
+// result in compilation errors.
+type UnsafeFileWritingMetadataServiceServer interface {
+	mustEmbedUnimplementedFileWritingMetadataServiceServer()
+}
+
+func RegisterFileWritingMetadataServiceServer(s grpc.ServiceRegistrar, srv FileWritingMetadataServiceServer) {
+	// If the following call panics, it indicates UnimplementedFileWritingMetadataServiceServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&FileWritingMetadataService_ServiceDesc, srv)
+}
+
+func _FileWritingMetadataService_SendFileMetadata_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileMetadataRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FileWritingMetadataServiceServer).SendFileMetadata(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FileWritingMetadataService_SendFileMetadata_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FileWritingMetadataServiceServer).SendFileMetadata(ctx, req.(*FileMetadataRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// FileWritingMetadataService_ServiceDesc is the grpc.ServiceDesc for FileWritingMetadataService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var FileWritingMetadataService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "hadoop_grpc.FileWritingMetadataService",
+	HandlerType: (*FileWritingMetadataServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SendFileMetadata",
+			Handler:    _FileWritingMetadataService_SendFileMetadata_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

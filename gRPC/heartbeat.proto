@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package heartbeat;
+package hadoop_grpc;
 
 option go_package = "./pb";
 
@@ -8,10 +8,15 @@ service HealthService {
   rpc SendHeartbeat(HeartbeatRequest) returns (HeartbeatResponse);
 }
 
+service FileWritingMetadataService {
+  rpc SendFileMetadata(FileMetadataRequest) returns (FileMetadataResponse);
+}
+
 message HeartbeatRequest {
   string worker_id = 1;
-  int64 timestamp = 2;
-  NodeResources resources = 3;
+  string ip = 2;
+  int64 timestamp = 3;
+  NodeResources resources = 4;
 }
 
 message HeartbeatResponse {
@@ -22,4 +27,19 @@ message NodeResources {
   int64 total_storage = 1;
   int64 used_storage = 2;
   int64 free_storage = 3;
+}
+
+message FileMetadataRequest {
+  int64 total_size = 1;
+  string file_name = 2;
+}
+
+message FileMetadataResponse {
+  bool status = 1;
+  repeated NodesID nodes = 2;
+}
+
+message NodesID {
+  string node_id = 1;
+  int32 node_ip = 2;
 }

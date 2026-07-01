@@ -24,8 +24,9 @@ const (
 type HeartbeatRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WorkerId      string                 `protobuf:"bytes,1,opt,name=worker_id,json=workerId,proto3" json:"worker_id,omitempty"`
-	Timestamp     int64                  `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	Resources     *NodeResources         `protobuf:"bytes,3,opt,name=resources,proto3" json:"resources,omitempty"`
+	Ip            string                 `protobuf:"bytes,2,opt,name=ip,proto3" json:"ip,omitempty"`
+	Timestamp     int64                  `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Resources     *NodeResources         `protobuf:"bytes,4,opt,name=resources,proto3" json:"resources,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -63,6 +64,13 @@ func (*HeartbeatRequest) Descriptor() ([]byte, []int) {
 func (x *HeartbeatRequest) GetWorkerId() string {
 	if x != nil {
 		return x.WorkerId
+	}
+	return ""
+}
+
+func (x *HeartbeatRequest) GetIp() string {
+	if x != nil {
+		return x.Ip
 	}
 	return ""
 }
@@ -185,23 +193,192 @@ func (x *NodeResources) GetFreeStorage() int64 {
 	return 0
 }
 
+type FileMetadataRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TotalSize     int64                  `protobuf:"varint,1,opt,name=total_size,json=totalSize,proto3" json:"total_size,omitempty"`
+	FileName      string                 `protobuf:"bytes,2,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FileMetadataRequest) Reset() {
+	*x = FileMetadataRequest{}
+	mi := &file_heartbeat_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileMetadataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileMetadataRequest) ProtoMessage() {}
+
+func (x *FileMetadataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FileMetadataRequest.ProtoReflect.Descriptor instead.
+func (*FileMetadataRequest) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *FileMetadataRequest) GetTotalSize() int64 {
+	if x != nil {
+		return x.TotalSize
+	}
+	return 0
+}
+
+func (x *FileMetadataRequest) GetFileName() string {
+	if x != nil {
+		return x.FileName
+	}
+	return ""
+}
+
+type FileMetadataResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        bool                   `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
+	Nodes         []*NodesID             `protobuf:"bytes,2,rep,name=nodes,proto3" json:"nodes,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FileMetadataResponse) Reset() {
+	*x = FileMetadataResponse{}
+	mi := &file_heartbeat_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileMetadataResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileMetadataResponse) ProtoMessage() {}
+
+func (x *FileMetadataResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FileMetadataResponse.ProtoReflect.Descriptor instead.
+func (*FileMetadataResponse) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *FileMetadataResponse) GetStatus() bool {
+	if x != nil {
+		return x.Status
+	}
+	return false
+}
+
+func (x *FileMetadataResponse) GetNodes() []*NodesID {
+	if x != nil {
+		return x.Nodes
+	}
+	return nil
+}
+
+type NodesID struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
+	NodeIp        int32                  `protobuf:"varint,2,opt,name=node_ip,json=nodeIp,proto3" json:"node_ip,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NodesID) Reset() {
+	*x = NodesID{}
+	mi := &file_heartbeat_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NodesID) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NodesID) ProtoMessage() {}
+
+func (x *NodesID) ProtoReflect() protoreflect.Message {
+	mi := &file_heartbeat_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NodesID.ProtoReflect.Descriptor instead.
+func (*NodesID) Descriptor() ([]byte, []int) {
+	return file_heartbeat_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *NodesID) GetNodeId() string {
+	if x != nil {
+		return x.NodeId
+	}
+	return ""
+}
+
+func (x *NodesID) GetNodeIp() int32 {
+	if x != nil {
+		return x.NodeIp
+	}
+	return 0
+}
+
 var File_heartbeat_proto protoreflect.FileDescriptor
 
 const file_heartbeat_proto_rawDesc = "" +
 	"\n" +
-	"\x0fheartbeat.proto\x12\theartbeat\"\x85\x01\n" +
+	"\x0fheartbeat.proto\x12\vhadoop_grpc\"\x97\x01\n" +
 	"\x10HeartbeatRequest\x12\x1b\n" +
-	"\tworker_id\x18\x01 \x01(\tR\bworkerId\x12\x1c\n" +
-	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\x126\n" +
-	"\tresources\x18\x03 \x01(\v2\x18.heartbeat.NodeResourcesR\tresources\"5\n" +
+	"\tworker_id\x18\x01 \x01(\tR\bworkerId\x12\x0e\n" +
+	"\x02ip\x18\x02 \x01(\tR\x02ip\x12\x1c\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\x128\n" +
+	"\tresources\x18\x04 \x01(\v2\x1a.hadoop_grpc.NodeResourcesR\tresources\"5\n" +
 	"\x11HeartbeatResponse\x12 \n" +
 	"\vacknowledge\x18\x01 \x01(\bR\vacknowledge\"z\n" +
 	"\rNodeResources\x12#\n" +
 	"\rtotal_storage\x18\x01 \x01(\x03R\ftotalStorage\x12!\n" +
 	"\fused_storage\x18\x02 \x01(\x03R\vusedStorage\x12!\n" +
-	"\ffree_storage\x18\x03 \x01(\x03R\vfreeStorage2[\n" +
-	"\rHealthService\x12J\n" +
-	"\rSendHeartbeat\x12\x1b.heartbeat.HeartbeatRequest\x1a\x1c.heartbeat.HeartbeatResponseB\x06Z\x04./pbb\x06proto3"
+	"\ffree_storage\x18\x03 \x01(\x03R\vfreeStorage\"Q\n" +
+	"\x13FileMetadataRequest\x12\x1d\n" +
+	"\n" +
+	"total_size\x18\x01 \x01(\x03R\ttotalSize\x12\x1b\n" +
+	"\tfile_name\x18\x02 \x01(\tR\bfileName\"Z\n" +
+	"\x14FileMetadataResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\bR\x06status\x12*\n" +
+	"\x05nodes\x18\x02 \x03(\v2\x14.hadoop_grpc.NodesIDR\x05nodes\";\n" +
+	"\aNodesID\x12\x17\n" +
+	"\anode_id\x18\x01 \x01(\tR\x06nodeId\x12\x17\n" +
+	"\anode_ip\x18\x02 \x01(\x05R\x06nodeIp2_\n" +
+	"\rHealthService\x12N\n" +
+	"\rSendHeartbeat\x12\x1d.hadoop_grpc.HeartbeatRequest\x1a\x1e.hadoop_grpc.HeartbeatResponse2u\n" +
+	"\x1aFileWritingMetadataService\x12W\n" +
+	"\x10SendFileMetadata\x12 .hadoop_grpc.FileMetadataRequest\x1a!.hadoop_grpc.FileMetadataResponseB\x06Z\x04./pbb\x06proto3"
 
 var (
 	file_heartbeat_proto_rawDescOnce sync.Once
@@ -215,21 +392,27 @@ func file_heartbeat_proto_rawDescGZIP() []byte {
 	return file_heartbeat_proto_rawDescData
 }
 
-var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_heartbeat_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_heartbeat_proto_goTypes = []any{
-	(*HeartbeatRequest)(nil),  // 0: heartbeat.HeartbeatRequest
-	(*HeartbeatResponse)(nil), // 1: heartbeat.HeartbeatResponse
-	(*NodeResources)(nil),     // 2: heartbeat.NodeResources
+	(*HeartbeatRequest)(nil),     // 0: hadoop_grpc.HeartbeatRequest
+	(*HeartbeatResponse)(nil),    // 1: hadoop_grpc.HeartbeatResponse
+	(*NodeResources)(nil),        // 2: hadoop_grpc.NodeResources
+	(*FileMetadataRequest)(nil),  // 3: hadoop_grpc.FileMetadataRequest
+	(*FileMetadataResponse)(nil), // 4: hadoop_grpc.FileMetadataResponse
+	(*NodesID)(nil),              // 5: hadoop_grpc.NodesID
 }
 var file_heartbeat_proto_depIdxs = []int32{
-	2, // 0: heartbeat.HeartbeatRequest.resources:type_name -> heartbeat.NodeResources
-	0, // 1: heartbeat.HealthService.SendHeartbeat:input_type -> heartbeat.HeartbeatRequest
-	1, // 2: heartbeat.HealthService.SendHeartbeat:output_type -> heartbeat.HeartbeatResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 0: hadoop_grpc.HeartbeatRequest.resources:type_name -> hadoop_grpc.NodeResources
+	5, // 1: hadoop_grpc.FileMetadataResponse.nodes:type_name -> hadoop_grpc.NodesID
+	0, // 2: hadoop_grpc.HealthService.SendHeartbeat:input_type -> hadoop_grpc.HeartbeatRequest
+	3, // 3: hadoop_grpc.FileWritingMetadataService.SendFileMetadata:input_type -> hadoop_grpc.FileMetadataRequest
+	1, // 4: hadoop_grpc.HealthService.SendHeartbeat:output_type -> hadoop_grpc.HeartbeatResponse
+	4, // 5: hadoop_grpc.FileWritingMetadataService.SendFileMetadata:output_type -> hadoop_grpc.FileMetadataResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_heartbeat_proto_init() }
@@ -243,9 +426,9 @@ func file_heartbeat_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_heartbeat_proto_rawDesc), len(file_heartbeat_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   6,
 			NumExtensions: 0,
-			NumServices:   1,
+			NumServices:   2,
 		},
 		GoTypes:           file_heartbeat_proto_goTypes,
 		DependencyIndexes: file_heartbeat_proto_depIdxs,

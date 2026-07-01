@@ -14,24 +14,21 @@ import (
 const port string = ":50051"
 const protocol string = "tcp"
 
-type server struct {
-	pb.UnimplementedHealthServiceServer
-}
-
 func updateWorker(ctx context.Context, req *pb.HeartbeatRequest) {
-	nodeMaster.GetHeartbeats().Set(req.GetWorkerId(), req.GetTimestamp())
-	nodeMaster.GetNodeStatus().Set(req.WorkerId, true)
-	nodeMaster.UpdateWorkerManager(req.WorkerId, req.Resources)
+
+	workerID := req.GetWorkerId()
+
+	nodeMaster.GetHeartbeats().Set(workerID, req.GetTimestamp())
+	nodeMaster.GetNodeStatus().Set(workerID, true)
+	nodeMaster.UpdateWorkerManager(workerID, req.Resources)
+	nodeMaster.GetNodesIPManager().Set(workerID, req.GetIp())
+
 }
 
 func (s *server) SendHeartbeat(ctx context.Context, req *pb.HeartbeatRequest) (*pb.HeartbeatResponse, error) {
 	log.Printf("Receive heartbeat from worker %s at %v", req.GetWorkerId(), req.GetTimestamp())
 
 	updateWorker(ctx, req)
-
-	totalStorage, _ := nodeMaster.GetWorkerManager().Get(req.WorkerId)
-
-	log.Printf("Worker id - %s send worker manager data total storage = %d", req.WorkerId, totalStorage)
 
 	return &pb.HeartbeatResponse{
 		Acknowledge: true,

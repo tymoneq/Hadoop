@@ -28,13 +28,14 @@ type Metadata struct {
 }
 
 type NodeMaster struct {
-	totalStorage  int64
-	freeStorage   int64
-	usedStorage   int64
-	heartbeats    *SafeMap[string, int64]
-	workerManager *SafeMap[string, WorkerManager]
-	nodeStatus    *SafeMap[string, bool] // true alive false down
-	metadata      *Metadata
+	totalStorage   int64
+	freeStorage    int64
+	usedStorage    int64
+	nodesIPManager *SafeMap[string, string]
+	heartbeats     *SafeMap[string, int64]
+	workerManager  *SafeMap[string, WorkerManager]
+	nodeStatus     *SafeMap[string, bool] // true alive false down
+	metadata       *Metadata
 }
 
 func NewMetadata() *Metadata {
@@ -47,13 +48,14 @@ func NewMetadata() *Metadata {
 
 func NewNodeMaster() *NodeMaster {
 	return &NodeMaster{
-		totalStorage:  0,
-		freeStorage:   0,
-		usedStorage:   0,
-		heartbeats:    NewSaveMap[string, int64](),
-		workerManager: NewSaveMap[string, WorkerManager](),
-		nodeStatus:    NewSaveMap[string, bool](),
-		metadata:      NewMetadata(),
+		totalStorage:   0,
+		freeStorage:    0,
+		usedStorage:    0,
+		nodesIPManager: NewSaveMap[string, string](),
+		heartbeats:     NewSaveMap[string, int64](),
+		workerManager:  NewSaveMap[string, WorkerManager](),
+		nodeStatus:     NewSaveMap[string, bool](),
+		metadata:       NewMetadata(),
 	}
 
 }
@@ -72,6 +74,10 @@ func (n *NodeMaster) GetUsedStorage() int64 {
 
 func (n *NodeMaster) GetHeartbeats() *SafeMap[string, int64] {
 	return n.heartbeats
+}
+
+func (n *NodeMaster) GetNodesIPManager() *SafeMap[string, string] {
+	return n.nodesIPManager
 }
 
 func (n *NodeMaster) GetWorkerManager() *SafeMap[string, WorkerManager] {
