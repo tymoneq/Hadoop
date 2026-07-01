@@ -28,7 +28,7 @@ func GetFileMetadata(filepath string) *FileToSend {
 }
 
 func sendFile(filepath string) bool {
-	fileMetadata := GetFileMetadata(filepath)
+	//fileMetadata := GetFileMetadata(filepath)
 
 	return true
 }
