@@ -17,6 +17,8 @@ func main() {
 
 	inputChan := make(chan string)
 
+	conn := startConnection()
+	defer conn.Close()
 	go func() {
 		scanner := bufio.NewScanner(os.Stdin)
 		for {

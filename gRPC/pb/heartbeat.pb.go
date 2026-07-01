@@ -300,7 +300,7 @@ func (x *FileMetadataResponse) GetNodes() []*NodesID {
 type NodesID struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	NodeId        string                 `protobuf:"bytes,1,opt,name=node_id,json=nodeId,proto3" json:"node_id,omitempty"`
-	NodeIp        int32                  `protobuf:"varint,2,opt,name=node_ip,json=nodeIp,proto3" json:"node_ip,omitempty"`
+	NodeIp        string                 `protobuf:"bytes,2,opt,name=node_ip,json=nodeIp,proto3" json:"node_ip,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -342,11 +342,11 @@ func (x *NodesID) GetNodeId() string {
 	return ""
 }
 
-func (x *NodesID) GetNodeIp() int32 {
+func (x *NodesID) GetNodeIp() string {
 	if x != nil {
 		return x.NodeIp
 	}
-	return 0
+	return ""
 }
 
 var File_heartbeat_proto protoreflect.FileDescriptor
@@ -374,7 +374,7 @@ const file_heartbeat_proto_rawDesc = "" +
 	"\x05nodes\x18\x02 \x03(\v2\x14.hadoop_grpc.NodesIDR\x05nodes\";\n" +
 	"\aNodesID\x12\x17\n" +
 	"\anode_id\x18\x01 \x01(\tR\x06nodeId\x12\x17\n" +
-	"\anode_ip\x18\x02 \x01(\x05R\x06nodeIp2_\n" +
+	"\anode_ip\x18\x02 \x01(\tR\x06nodeIp2_\n" +
 	"\rHealthService\x12N\n" +
 	"\rSendHeartbeat\x12\x1d.hadoop_grpc.HeartbeatRequest\x1a\x1e.hadoop_grpc.HeartbeatResponse2u\n" +
 	"\x1aFileWritingMetadataService\x12W\n" +

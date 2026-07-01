@@ -41,5 +41,5 @@ message FileMetadataResponse {
 
 message NodesID {
   string node_id = 1;
-  int32 node_ip = 2;
+  string node_ip = 2;
 }

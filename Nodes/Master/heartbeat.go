@@ -3,16 +3,10 @@ package main
 import (
 	"context"
 	"log"
-	"net"
 	"time"
 
 	pb "hadoop/gRPC/pb"
-
-	"google.golang.org/grpc"
 )
-
-const port string = ":50051"
-const protocol string = "tcp"
 
 func updateWorker(ctx context.Context, req *pb.HeartbeatRequest) {
 
@@ -33,23 +27,6 @@ func (s *server) SendHeartbeat(ctx context.Context, req *pb.HeartbeatRequest) (*
 	return &pb.HeartbeatResponse{
 		Acknowledge: true,
 	}, nil
-}
-
-func openConnection() {
-	lis, err := net.Listen(protocol, port)
-	if err != nil {
-		log.Println("Something went wrong")
-	}
-
-	s := grpc.NewServer()
-
-	pb.RegisterHealthServiceServer(s, &server{})
-
-	log.Printf("Server listening on port %s", port)
-	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Server Error: %v", err)
-	}
-
 }
 
 func checkHealth(interval time.Duration) {

@@ -5,9 +5,6 @@ import (
 	"log"
 )
 
-const BLOCK_SIZE int64 = 8096
-const REPLICATION_FACTOR uint8 = 3
-
 type WorkerManager struct {
 	totalStorage int64
 	usedStorage  int64
